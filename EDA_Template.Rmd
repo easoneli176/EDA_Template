@@ -1,0 +1,387 @@
+---
+title: "EDA Template"
+subtitle: "EDA = Exploratory Data Analysis"
+author: "Prepared by: Lizzie Eason"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+output: 
+  html_document:
+    number_sections: true
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+    highlight: zenburn
+    code_folding: hide
+---
+<style type="text/css">
+
+<style>
+
+#TOC {/*add image to the top of the table of contents */
+background: ![]("C:/Users/eason/Documents/me.png");
+background-size: contain;
+padding-top: 190px !important;
+background-repeat: no-repeat;
+background-position-y: 18px;
+}
+
+#TOC:: after {
+  content: "Proprietary & confidential. \A Unauthorized use or publication of any part of this document outside of Lizzie is strictly prohibited. \A &copy; 2022 Lizzie is queen";
+  white-space: pre-wrap;
+  font-size: 12px;
+  display: grid;
+  text-align: center ;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 15px;
+  padding-bottom: 10px;
+  text-decoration-line: underline;
+  text-decoration-color: #DDA0DD;
+  color: #DDA0DD;
+  }
+  
+body{ /* Normal */
+  font-size: 16px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+td { /* Table */
+  font-size: 16px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif
+}
+h1. title {/* set font family, size and color */
+  font-size: 32px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #DDA0DD;
+  line-height: 36px;
+}
+h3. subtitle{
+  font-size: 28px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+h4.author{
+  font-size: 24px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+h4.date{
+  font-size: 24px;
+  font -family: Arial. "Helvetica Neuc", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+h1 { /* Header 1 */
+  font-size: 28px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+h2 {/* Header 2 */
+  font-size: 26px;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+h3{ /* Header 3 */
+  font-size: 24px;
+  font-family: Arial, "Helvetia Neue", Helvetica, sans-serif;
+  font-weight: 700;
+  color: #B56EDC;
+}
+code.r{ /* code block */
+  font-size: 14px;
+  font-family: Georgia, Times, "Times New Roman", serif;
+}
+pre{ /* Code block - determines code spacing between lines */
+  font-size: 14px;
+}
+.col2 {
+columns: 2 200px; /*number of columns and width in pixels*/
+-webkit-columns: 2 200px; /*chrome, safari */
+-moz-columns: 2 200px; /* firefox */
+}
+.column-left {
+  float: left;
+  width: 50%;
+  text-align: right;
+}
+
+#main .nav-pills > li.active > a,
+#main .nav-pills > li.active > a:hover,
+#main .nav-pills > li.active > a:focus {
+    background-color: #22983B;
+}
+
+#main .nav-pills > li > a:hover {
+    background-color: #22983B;
+}
+
+h1, h2, h3, h4, h5, h6, legend {
+    color: #22983B;
+}
+
+#nav-top span.glyphicon {
+    color: #22983B;
+}
+
+#table-of-contents header {
+    color: #22983B;
+}
+
+#table-of-contents h2 {
+    background-color: #22983B;
+}
+
+#main a {
+    background-image: linear-gradient(180deg,#d64a70,#d64a70);
+    color: #c7254e;
+}
+
+a:hover {
+    color: #3d1308;
+}
+
+a:visited {
+    color: #3d1308;
+}
+
+</style>
+
+![](C:/Users/eason/Desktop/hairpics/crop.png)
+
+# Introduction {.tabset .tabset-fade}
+
+This template is meant to provide a starting point for exploratory data analysis. It includes many other packages Lizzie has built. To an extent, you can plug in your own data and use this template as-is, but every data project is unique, and I recommend using this more as a guidance tool than a plug-and-chug template.
+
+## Data Summary
+
+I like to begin my EDA by using this package to give an overall summary of data. I create a mock dataframe here, but you can read in your own.
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(results = 'asis'
+               , comment = NA
+               , prompt = FALSE
+               , cache = FALSE)
+library(summarytools)
+st_options(plain.ascii = FALSE
+           , style = "rmarkdown"
+           , footnote = NA
+           , subtitle.emphasis = FALSE)
+knitr::opts_chunk$set(cache = TRUE, warning = FALSE,
+                      message = FALSE, cache.lazy = FALSE)
+
+library(png)
+library(dplyr)
+library(ggplot2)
+library(kableExtra)
+```
+
+```{r echo=FALSE}
+st_css()
+```
+
+```{r readdat, cache=TRUE}
+mydata <- data.frame(pred1 = rep(1:4,10),pred2=rep(1:5,8),missvar=as.numeric(c("NA",rep(1:2,19),"NA")))
+
+mydata$groupvar1<-c(rep("A",20),rep("B",20))
+mydata$groupvar2<-c(rep("A",10),rep("B",20),rep("C",10))
+mydata$weight<-c(rep(1,30),rep(0,10))
+
+dfSummary(mydata, plain.ascii = FALSE, style = "grid", graph.magnif = .75, valid.col=FALSE, tmp.img.dir = "/tmp")
+```
+
+## Methodology
+
+Normally, this is where I'd describe my methodology, but since this is a template, I'll instead use this section to show to how to display data in a table format.
+
+Most datasets I work with are too big to be displayed as a table, but for the purposes of showing how to do this, you can view the full dataset this way:
+
+```{r cache=TRUE}
+knitr::kable(mydata)
+
+#you can algin with "c" for center and "r" for right. Aligning multiple columns, you can align all of them by tripling the letter, for example "rrr" to right align all
+
+knitr::kable(as.data.frame(table(mydata$pred1)),align = "l")
+```
+
+# Initial Analyses {.tabset .tabset-fade}
+
+## Factor Visualizations
+
+First, we create one-way plots for our factor variables. I show some functions I like to use to make this simple. I also show the CatCorr package which is also available on my github for determining when factor variables are similar.
+
+```{r cache = TRUE}
+#you can replace this list with factor variables in your data if you wish
+facvars<-c("groupvar1","groupvar2","weight")
+
+factor.df<- mydata[,which(colnames(mydata) %in% facvars)]
+
+factorplot<-function(i){
+  ggplot(factor.df, aes(x=factor.df[,i],weight=weight))+
+    geom_bar(aes(y=(..count..)/sum(..count..)))+
+    xlab(colnames(factor.df)[i])+
+    #uncomment if xlabels should be turned sideways if many categories
+    #theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))+
+    ylab("Proportion")
+}
+
+factorplot(1)
+factorplot(2)
+```
+
+Now, we use a package I built that harnesses Cramer's V as a proxy for correlation between factor variables.
+
+```{r cache = TRUE}
+#install.packages("devtools")
+#devtools::install_github("easoneli176/CatCorr")
+
+library(CatCorr)
+catcorrplot(factor.df)
+```
+
+## Numeric Visualizations
+
+Recall the summary gives numeric one-way data, so this is only needed if you wish to utilize weights or like different types of visualizations for numeric distributions.
+
+```{r cache = TRUE}
+#replace these with a list of your numeric variables & weighting variable if needed
+numvars<-c("pred1","pred2","weight")
+
+num.df<-mydata[,which(colnames(mydata) %in% numvars)]
+
+num.df$dummy<-rep(1,dim(num.df)[1])
+
+ggplot(num.df, aes(x=as.factor(dummy),y=pred1,weight=weight))+geom_violin()+xlab("Distribution") #uncomment if need to zoom in due to outliers + coord_cartesian(ylim = c(0,1))
+
+ggplot(num.df, aes(x=as.factor(dummy),y=pred2,weight=weight))+geom_violin()+xlab("Distribution")
+```
+
+Now, we evaluate the correlations:
+
+```{r cache=TRUE}
+#Note that missing rows or stagnant rows will break this code
+num.df<-num.df[,-which(colnames(num.df) %in% c("dummy"))]
+
+corm<-cor(num.df)
+
+library(corrplot)
+
+corrplot(corm, type = "upper", order = "hclust", tl.col = "black", tl.srt = 45)
+```
+
+# Clean Data {.tabset .tabset-fade}
+
+## Data Cleaning
+
+Data cleaning can create a myriad of steps. Here, we highlight a package I created that can make imputing missing values easier.
+
+```{r cache=TRUE}
+#install.packages("devtools")
+#devtools::install_github("easoneli176/Numpute")
+
+library(Numpute)
+
+numpute_example<-numpute(mydata,"missvar","groupedmean",facvar=c("groupvar1","groupvar2"))
+
+knitr::kable(numpute_example,align="l")
+
+#append to dataset:
+mydata<-mydata[,-which(colnames(mydata) %in% c("missvar"))]
+
+mydata<-as.data.frame(cbind(mydata,numpute_example))
+```
+
+## Feature Engineering
+
+Feature engineering is an art form. Here, we showcase a package I built that can help to find groups of correlated variables in large datasets:
+
+```{r cache=TRUE}
+#create variable to be correlated:
+num.df$corr<-num.df$pred1*2+rbinom(dim(num.df)[1],1,prob=.3)*.01
+#install.packages("devtools")
+#devtools::install_github("easoneli176/CorrClust")
+library(CorrClust)
+
+cc<-CorrClust(num.df,.8)
+
+cc %>%
+  kable(format = "html", col.names = colnames(cc)) %>%
+  kable_styling() %>%
+  kableExtra::scroll_box(width="100%", height = "300px")
+
+cc$Pred<-rownames(cc)
+
+clusters<-unique(cc[duplicated(cc$Cluster),]$Cluster)
+```
+
+We see one cluster with the variable we created for this demo to be correlated. We show code below to find the variables in the cluster:
+
+```{r cache=TRUE}
+cc2<-cc[cc$Cluster == clusters[1],]
+
+cc2$Pred
+```
+
+## Updated Data Summary
+
+Once the data has been cleaned, it's nice to have a new summary of the updated data:
+
+```{r cache=TRUE}
+dfSummary(mydata, plain.ascii = FALSE, style = "grid", graph.magnif = .75, valid.col=FALSE, tmp.img.dir = "/tmp")
+```
+
+## Two Way Factor Plots
+
+Once the data has been cleaned properly, we can investigate relationships between predictors and the target variable. This may be a step you do during cleaning as well. Recall this template is only a guideline.
+
+```{r cache=TRUE}
+# withingroup_plot<-function(data, cat, variable, label){
+#   ggplot(data, aes=as.factor(cat),fill=as.factor(variable))+
+#     labs(fill=label)+
+#     geom_bar(aes( y=..count../tapply(..count.., ..x.. ,sum)[..x..]), position="dodge" ) +
+#     geom_text(aes(y=..count../tapply(..count..,..x..,sum)[..x..],label=scales::percent(..count../tapply(..count..,..x..,sum)[..x..])), stat="count",position=position_dodge(.9),vjust=-.5)+
+#     xlab(label)+
+#     ylab("Percent")+
+#     scale_y_continuous(labels=scales::percent)+theme(axis.text.x = element_text(angle=90,vjust=.5,hjust=1))
+# }
+# 
+# withingroup_plot(mydata,mydata$groupvar2, mydata$groupvar1, 'groupvar1')
+```
+
+## Two Way Numeric Plots
+
+# {.unlisted .unnumbered}
+
+If you want content to show up below your tabs regardless of which tab you're on, use this code.
+
+# Appendix
+
+Here, we provide some fun tricks to make your analysis more visually appealing.
+
+<p style="color:#235cf4;font-size:16px">Use this code to write in colored font.</p>
+
+**Use this code to write in bolded font.**
+
+<p style="color:#235cf4;font-size:16px">**Use this code to do both at once.**</p>
+
+Colors are controlled by codes that come after "color:" throughout the code. You can google colors you like and change these codes to tailor colors to your personal preference. Google even has a nice "color picker" that will let you do a sliding scale to find the code for the color you want, and you can match colors here: https://imagecolorpicker.com/en. I haven't figured out how to change the color of the tab titles and chapter selector from the default R blue yet, but the rest is entirely malleable.
+
+To do calculations in text, do `r 2+2`
+
+If you're familiar with Latex, use the dollar signs to use it like this $\frac{1}{2}$, or doubles to make a new line equation: $$\frac{1}{2}$$
+
+To add scroll bars to a table, use this code:
+
+```{r cache = TRUE}
+mydata %>%
+  kable(format = "html", col.names = colnames(mydata)) %>%
+  kable_styling() %>%
+  kableExtra::scroll_box(width = "100%", height = "300px")
+```
+

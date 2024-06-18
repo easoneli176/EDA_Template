@@ -1,0 +1,10 @@
+knitr
+summarytools
+png
+dplyr
+ggplot2
+kableExtra
+CatCorr
+corrplot
+Numpute
+CorrClust
