@@ -297,6 +297,22 @@ mydata<-mydata[,-which(colnames(mydata) %in% c("missvar"))]
 mydata<-as.data.frame(cbind(mydata,numpute_example))
 ```
 
+I also occasionally need to condense factor variables when certain levels are not credible. I use this code for that:
+
+```{r cache=TRUE}
+# #not loading library for now to make package easier
+# library(forcats)
+# 
+# mergelevs<-function(x,n){
+#   t<-table(x)
+#   sub<-t[t<=n]
+#   newvar<-fct_collapse(x,lowcred=names(sub))
+#   newvar
+# }
+# 
+# mydata$condensedvar<-mergelevs(mydata$oldvar,10)
+```
+
 ## Feature Engineering
 
 Feature engineering is an art form. Here, we showcase a package I built that can help to find groups of correlated variables in large datasets:
