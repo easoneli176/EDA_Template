@@ -357,12 +357,13 @@ dfSummary(mydata, plain.ascii = FALSE, style = "grid", graph.magnif = .75, valid
 Once the data has been cleaned properly, we can investigate relationships between predictors and the target variable. This may be a step you do during cleaning as well. Recall this template is only a guideline.
 
 ```{r cache=TRUE}
-# withingroup_plot<-function(data, cat, variable, label){
+#library(stringr)
+# withingroup_plot<-function(data, cat, variable){
 #   ggplot(data, aes=as.factor(cat),fill=as.factor(variable))+
-#     labs(fill=label)+
+#     labs(fill=str_split(as.character(deparse(substitute(variable))),"\\$")[[1]][2])+
 #     geom_bar(aes( y=..count../tapply(..count.., ..x.. ,sum)[..x..]), position="dodge" ) +
 #     geom_text(aes(y=..count../tapply(..count..,..x..,sum)[..x..],label=scales::percent(..count../tapply(..count..,..x..,sum)[..x..])), stat="count",position=position_dodge(.9),vjust=-.5)+
-#     xlab(label)+
+#     xlab(fill=str_split(as.character(deparse(substitute(cat))),"\\$")[[1]][2])+
 #     ylab("Percent")+
 #     scale_y_continuous(labels=scales::percent)+theme(axis.text.x = element_text(angle=90,vjust=.5,hjust=1))
 # }
