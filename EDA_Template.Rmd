@@ -368,7 +368,7 @@ Once the data has been cleaned properly, we can investigate relationships betwee
 #     scale_y_continuous(labels=scales::percent)+theme(axis.text.x = element_text(angle=90,vjust=.5,hjust=1))
 # }
 # 
-# withingroup_plot(mydata,mydata$groupvar2, mydata$groupvar1, 'groupvar1')
+# withingroup_plot(mydata,mydata$groupvar2, mydata$groupvar1)
 ```
 
 ## Two Way Numeric Plots
